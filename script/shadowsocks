@@ -1,0 +1,85 @@
+#!/bin/bash
+# Created by http://www.vps-murah.net
+# Remodified by WaGo-G
+
+if [[ $USER != 'root' ]]; then
+	echo "Oops! root privileges needed"
+	exit
+fi
+while :
+do
+	clear
+	echo " "
+	echo " "
+	echo "-----------------------------------------"
+	echo "            Install Shadowsocks        "
+	echo "-----------------------------------------"
+	echo "INFO: You can install Shadowsocks together with current installed vpn service"
+	echo "I already tried it so many times"
+	echo " "
+	echo "About the Net Stable Fixer, after you run it, connect & disconnect to your SSR VPN first"
+	echo "then rerun the Net Stable Fixer again to make it more effectively!"
+	echo " "
+	echo "NOTE: If you want to install this Shadowsocks"
+	echo "I recommend you to use the port 8388 for Shadowsocks"
+	echo "So the server will not confused about ports"
+	echo "Trust me I warned you"
+	echo "          - a friendly advice from reputation"
+	echo " "
+	echo "    [ MENU ]"
+	echo "1. Install Shadowsocks"
+	echo "2. Uninstall Shadowsocks"
+	echo "3. ShadowsocksR Net Stable Fixer"
+	echo "4. Go back"
+	read -p "Choose from 1 to 4 : " option2
+	case $option2 in
+		1)
+		clear
+		cd
+		wget --no-check-certificate https://raw.githubusercontent.com/wagovps/OvpnSsl/master/tool/shadowsocks-all.sh
+		chmod +x shadowsocks-all.sh
+		./shadowsocks-all.sh 2>&1 | tee shadowsocks-all.log
+		;;
+		2)
+		clear
+		cd
+		./shadowsocks-all.sh uninstall
+		rm shadowsocks-all.log
+		rm shadowsocks_r_qr.png
+		;;
+		3)
+		clear
+		cd
+		wget --no-check-certificate -O /opt/nikkoautossr.sh https://raw.githubusercontent.com/NikkoRod/nikkossr/master/nikkoautossr.sh
+		chmod 755 /opt/nikkoautossr.sh
+		clear
+		apt-get install -y cron
+		sleep 2
+		clear
+		echo "Initiating Smart Net Stable Fixer"
+		sleep 2
+		clear
+		echo "Starting..."
+		sleep 2
+		clear
+		echo "Running the SSR Net Stabilizer..."
+		(crontab -l ; echo "*/1 * * * * /opt/nikkoautossr.sh") | crontab -
+		sleep 2
+		clear
+		(crontab -l ; echo "*/1 * * * * /opt/nikkoautossr.sh") | crontab -
+		echo "[ >< ] Finalizing"
+		sleep 2
+		clear
+		echo "[ OK ] Finalizing"
+		sleep 1
+		clear
+		ssrlog
+		;;
+		4)
+		clear
+		exit
+		menu
+		;;
+	esac
+done
+cd

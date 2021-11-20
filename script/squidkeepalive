@@ -1,0 +1,69 @@
+#!/bin/bash
+# Created by http://www.vps-murah.net
+# Remodified by WaGo-G
+
+if [[ $USER != 'root' ]]; then
+	echo "Oops! root privileges needed"
+	exit
+fi
+while :
+do
+	clear
+	echo " "
+	echo " "
+	echo "-----------------------------------------"
+	echo "         Squid Keep Alive       "
+	echo "-----------------------------------------"
+	echo "When you install this tool, you'll not being"
+	echo "worried again about your always sleeping Squid"
+	echo "This tool will help your server keep"
+	echo "your squid alive automatically when it shutdown"
+	echo " "
+	echo "Tutorial: Install it first then select Run Monitor Squid"
+	echo " "
+	echo "     [ MENU ]"
+	echo "1. Install/Repair Now"
+	echo "2. Run Monitor Squid"
+	echo "3. Go back"
+	read -p "Choose from 1 to 2: " option2
+	case $option2 in
+		1)
+		clear
+		rm /opt/squidkeepalive.sh
+		wget --no-check-certificate -O /opt/squidkeepalive.sh https://raw.githubusercontent.com/wagovps/OvpnSsl/master/tool/squidkeepalive.sh
+		chmod 755 /opt/squidkeepalive.sh
+		clear
+		apt-get install -y cron
+		clear
+		echo "Squid Keep Alive Successfully Installed!"
+		sleep 3
+		;;
+		2)
+		clear
+		(crontab -l ; echo "*/1 * * * * /opt/squidkeepalive.sh") | crontab -
+		clear
+		echo "Initializing..."
+		sleep 2
+		clear
+		echo "Synchronizing..."
+		sleep 2
+		clear
+		echo "Running..."
+		sleep 2
+		clear
+		(crontab -l ; echo "*/1 * * * * /opt/squidkeepalive.sh") | crontab -
+		clear
+		echo "Finalizing..."
+		sleep 2
+		clear
+		echo "Squid Monitor is now running!"
+		sleep 2
+		clear
+		;;
+		3)
+		clear
+		exit
+		;;
+	esac
+done
+cd

@@ -1,0 +1,391 @@
+#!/bin/bash
+# Created by http://www.vps-murah.net
+# Remodified by WaGo-G
+
+if [[ $USER != 'root' ]]; then
+	echo "Oops! root privileges needed"
+	exit
+fi
+while :
+do
+	clear
+	echo " "
+	echo " "
+	echo "-----------------------------------------"
+	echo "          Change OpenVPN DNS  "
+	echo "-----------------------------------------"
+	echo "Not satisfied with your DNS Server?"
+	echo "Try our DNS Changer"
+	echo " "
+	echo "    [ MENU ]"
+	echo "1. Change to Cloudflare"
+	echo "2. Change to Quad9"
+	echo "3. Change to Verisign"
+	echo "4. Change to OpenDNS"
+	echo "5. Change to Verisign DNS"
+	echo "6. Change to Level 3 DNS"
+	echo "7. Change to DNS.Watch"
+	echo "8. Change to Comodo DNS"
+	echo "9. Exit"
+	read -p "Choose from 1 to 9 : " option2
+	case $option2 in
+		1)
+		clear
+		cat > /etc/openvpn/server.conf <<-END
+		port 1153
+		proto tcp
+		dev tun
+		ca ca.crt
+		cert server.crt
+		key server.key
+		dh dh2048.pem
+		verify-client-cert none
+		username-as-common-name
+		plugin /usr/lib/openvpn/plugins/openvpn-plugin-auth-pam.so login
+		server 192.168.10.0 255.255.255.0
+		ifconfig-pool-persist ipp.txt
+		push "redirect-gateway def1 bypass-dhcp"
+		push "dhcp-option DNS 1.1.1.1"
+		push "dhcp-option DNS 1.0.0.1"
+		push "route 0.0.0.0 255.255.255.255 net_gateway"
+		push "route-method exe"
+		push "route-delay 2"
+		socket-flags TCP_NODELAY
+		push "socket-flags TCP_NODELAY"
+		duplicate-cn
+		keepalive 10 120
+		comp-lzo
+		user nobody
+		group nogroup
+		persist-key
+		persist-tun
+		status openvpn-status.log
+		log openvpn.log
+		verb 3
+		ncp-disable
+		cipher none
+		auth none
+		
+		END
+		chmod +x /usr/lib/openvpn/*
+		clear
+		service openvpn restart
+		echo "DNS Changed to Cloudflare successfully!"
+		sleep 5
+		;;
+		2)
+		clear
+		cat > /etc/openvpn/server.conf <<-END
+		port 1153
+		proto tcp
+		dev tun
+		ca ca.crt
+		cert server.crt
+		key server.key
+		dh dh2048.pem
+		verify-client-cert none
+		username-as-common-name
+		plugin /usr/lib/openvpn/plugins/openvpn-plugin-auth-pam.so login
+		server 192.168.10.0 255.255.255.0
+		ifconfig-pool-persist ipp.txt
+		push "redirect-gateway def1 bypass-dhcp"
+		push "dhcp-option DNS 9.9.9.9"
+		push "dhcp-option DNS 149.112.112.112"
+		push "route 0.0.0.0 255.255.255.255 net_gateway"
+		push "route-method exe"
+		push "route-delay 2"
+		socket-flags TCP_NODELAY
+		push "socket-flags TCP_NODELAY"
+		duplicate-cn
+		keepalive 10 120
+		comp-lzo
+		user nobody
+		group nogroup
+		persist-key
+		persist-tun
+		status openvpn-status.log
+		log openvpn.log
+		verb 3
+		ncp-disable
+		cipher none
+		auth none
+		
+		END
+		chmod +x /usr/lib/openvpn/*
+		clear
+		service openvpn restart
+		echo "DNS Changed to Quad9 successfully!"
+		sleep 5
+		;;
+		3)
+		clear
+		cat > /etc/openvpn/server.conf <<-END
+		port 1153
+		proto tcp
+		dev tun
+		ca ca.crt
+		cert server.crt
+		key server.key
+		dh dh2048.pem
+		verify-client-cert none
+		username-as-common-name
+		plugin /usr/lib/openvpn/plugins/openvpn-plugin-auth-pam.so login
+		server 192.168.10.0 255.255.255.0
+		ifconfig-pool-persist ipp.txt
+		push "redirect-gateway def1 bypass-dhcp"
+		push "dhcp-option DNS 8.8.8.8"
+		push "dhcp-option DNS 8.8.4.4"
+		push "route 0.0.0.0 255.255.255.255 net_gateway"
+		push "route-method exe"
+		push "route-delay 2"
+		socket-flags TCP_NODELAY
+		push "socket-flags TCP_NODELAY"
+		duplicate-cn
+		keepalive 10 120
+		comp-lzo
+		user nobody
+		group nogroup
+		persist-key
+		persist-tun
+		status openvpn-status.log
+		log openvpn.log
+		verb 3
+		ncp-disable
+		cipher none
+		auth none
+		
+		END
+		chmod +x /usr/lib/openvpn/*
+		clear
+		service openvpn restart
+		echo "DNS Changed to Google successfully!"
+		sleep 5
+		;;
+		4)
+		clear
+		cat > /etc/openvpn/server.conf <<-END
+		port 1153
+		proto tcp
+		dev tun
+		ca ca.crt
+		cert server.crt
+		key server.key
+		dh dh2048.pem
+		verify-client-cert none
+		username-as-common-name
+		plugin /usr/lib/openvpn/plugins/openvpn-plugin-auth-pam.so login
+		server 192.168.10.0 255.255.255.0
+		ifconfig-pool-persist ipp.txt
+		push "redirect-gateway def1 bypass-dhcp"
+		push "dhcp-option DNS 208.67.222.222"
+		push "dhcp-option DNS 208.67.220.220"
+		push "route 0.0.0.0 255.255.255.255 net_gateway"
+		push "route-method exe"
+		push "route-delay 2"
+		socket-flags TCP_NODELAY
+		push "socket-flags TCP_NODELAY"
+		duplicate-cn
+		keepalive 10 120
+		comp-lzo
+		user nobody
+		group nogroup
+		persist-key
+		persist-tun
+		status openvpn-status.log
+		log openvpn.log
+		verb 3
+		ncp-disable
+		cipher none
+		auth none
+		
+		END
+		chmod +x /usr/lib/openvpn/*
+		clear
+		service openvpn restart
+		echo "DNS Changed to OpenDNS successfully!"
+		sleep 5
+		;;
+		5)
+		clear
+		cat > /etc/openvpn/server.conf <<-END
+		port 1153
+		proto tcp
+		dev tun
+		ca ca.crt
+		cert server.crt
+		key server.key
+		dh dh2048.pem
+		verify-client-cert none
+		username-as-common-name
+		plugin /usr/lib/openvpn/plugins/openvpn-plugin-auth-pam.so login
+		server 192.168.10.0 255.255.255.0
+		ifconfig-pool-persist ipp.txt
+		push "redirect-gateway def1 bypass-dhcp"
+		push "dhcp-option DNS 64.6.64.6"
+		push "dhcp-option DNS 64.6.65.6"
+		push "route 0.0.0.0 255.255.255.255 net_gateway"
+		push "route-method exe"
+		push "route-delay 2"
+		socket-flags TCP_NODELAY
+		push "socket-flags TCP_NODELAY"
+		duplicate-cn
+		keepalive 10 120
+		comp-lzo
+		user nobody
+		group nogroup
+		persist-key
+		persist-tun
+		status openvpn-status.log
+		log openvpn.log
+		verb 3
+		ncp-disable
+		cipher none
+		auth none
+		
+		END
+		chmod +x /usr/lib/openvpn/*
+		clear
+		service openvpn restart
+		echo "DNS Changed to Verisign successfully!"
+		sleep 5
+		;;
+		6)
+		clear
+		cat > /etc/openvpn/server.conf <<-END
+		port 1153
+		proto tcp
+		dev tun
+		ca ca.crt
+		cert server.crt
+		key server.key
+		dh dh2048.pem
+		verify-client-cert none
+		username-as-common-name
+		plugin /usr/lib/openvpn/plugins/openvpn-plugin-auth-pam.so login
+		server 192.168.10.0 255.255.255.0
+		ifconfig-pool-persist ipp.txt
+		push "redirect-gateway def1 bypass-dhcp"
+		push "dhcp-option DNS 209.244.0.3"
+		push "dhcp-option DNS 209.244.0.4"
+		push "route 0.0.0.0 255.255.255.255 net_gateway"
+		push "route-method exe"
+		push "route-delay 2"
+		socket-flags TCP_NODELAY
+		push "socket-flags TCP_NODELAY"
+		duplicate-cn
+		keepalive 10 120
+		comp-lzo
+		user nobody
+		group nogroup
+		persist-key
+		persist-tun
+		status openvpn-status.log
+		log openvpn.log
+		verb 3
+		ncp-disable
+		cipher none
+		auth none
+		
+		END
+		chmod +x /usr/lib/openvpn/*
+		clear
+		service openvpn restart
+		echo "DNS Changed to Level 3 Communications successfully!"
+		sleep 5
+		;;
+		7)
+		clear
+		cat > /etc/openvpn/server.conf <<-END
+		port 1153
+		proto tcp
+		dev tun
+		ca ca.crt
+		cert server.crt
+		key server.key
+		dh dh2048.pem
+		verify-client-cert none
+		username-as-common-name
+		plugin /usr/lib/openvpn/plugins/openvpn-plugin-auth-pam.so login
+		server 192.168.10.0 255.255.255.0
+		ifconfig-pool-persist ipp.txt
+		push "redirect-gateway def1 bypass-dhcp"
+		push "dhcp-option DNS 84.200.69.80"
+		push "dhcp-option DNS 84.200.70.40"
+		push "route 0.0.0.0 255.255.255.255 net_gateway"
+		push "route-method exe"
+		push "route-delay 2"
+		socket-flags TCP_NODELAY
+		push "socket-flags TCP_NODELAY"
+		duplicate-cn
+		keepalive 10 120
+		comp-lzo
+		user nobody
+		group nogroup
+		persist-key
+		persist-tun
+		status openvpn-status.log
+		log openvpn.log
+		verb 3
+		ncp-disable
+		cipher none
+		auth none
+		
+		END
+		chmod +x /usr/lib/openvpn/*
+		clear
+		service openvpn restart
+		echo "DNS Changed to DNS.Watch successfully!"
+		sleep 5
+		;;
+		8)
+		clear
+		cat > /etc/openvpn/server.conf <<-END
+		port 1153
+		proto tcp
+		dev tun
+		ca ca.crt
+		cert server.crt
+		key server.key
+		dh dh2048.pem
+		verify-client-cert none
+		username-as-common-name
+		plugin /usr/lib/openvpn/plugins/openvpn-plugin-auth-pam.so login
+		server 192.168.10.0 255.255.255.0
+		ifconfig-pool-persist ipp.txt
+		push "redirect-gateway def1 bypass-dhcp"
+		push "dhcp-option DNS 8.26.56.26"
+		push "dhcp-option DNS 8.20.247.20"
+		push "route 0.0.0.0 255.255.255.255 net_gateway"
+		push "route-method exe"
+		push "route-delay 2"
+		socket-flags TCP_NODELAY
+		push "socket-flags TCP_NODELAY"
+		duplicate-cn
+		keepalive 10 120
+		comp-lzo
+		user nobody
+		group nogroup
+		persist-key
+		persist-tun
+		status openvpn-status.log
+		log openvpn.log
+		verb 3
+		ncp-disable
+		cipher none
+		auth none
+		
+		END
+		chmod +x /usr/lib/openvpn/*
+		clear
+		service openvpn restart
+		echo "DNS Changed to Comodo DNS successfully!"
+		sleep 5
+		;;
+		9)
+		clear
+		exit
+		menu
+		;;
+	esac
+done
+cd

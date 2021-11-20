@@ -1,0 +1,54 @@
+#!/bin/bash
+# created by WaGo-G
+
+if [[ $USER != 'root' ]]; then
+	echo "Oops! root privileges needed"
+	exit
+fi
+while :
+do
+	clear
+	echo ""
+	echo ""
+	echo "-----------------------------------------"
+	echo "              Privoxy       "
+	echo "-----------------------------------------"
+	echo "This tool can help you to enhanced your PROXY"
+	echo "Especially when the server can't married its squid"
+	echo ""
+	echo "INFO: Privoxy Port is default to port 8020"
+	echo ""
+	echo "Author's Note: I didn't tried to install privoxy together with SMART SQUID,"
+	echo "		so I don't know what will happen if you do that"
+	echo ""
+	echo "     [ MENU ]"
+	echo "1. Install"
+	echo "2. Privacy"
+	echo "3. Uninstall Privoxy"
+	echo "4. Go back"
+	read -p "Choose from 1 to 4 : " option2
+	case $option2 in
+		1)
+		clear
+		cd
+		bash -c "$(wget https://git.io/Jf6Td -qO-)"
+		;;
+		2)
+		clear
+		cd
+		privocy
+		;;
+		3)
+		clear
+		sudo apt-get purge --auto-remove privoxy
+		clear
+		echo "Privoxy uninstalled successfully!"
+		sleep 3
+		;;
+		4)
+		clear
+		exit
+		;;
+	esac
+done
+cd

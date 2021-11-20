@@ -1,0 +1,30 @@
+#!/bin/bash
+# Created by http://www.vps-murah.net
+# Remodified by WaGo-G
+
+if [[ $USER != 'root' ]]; then
+	echo "Oops! root privileges needed"
+	exit
+fi
+while :
+do
+	clear
+	echo " "
+	echo " "
+	echo "-----------------------------------------"
+	echo "         Update Menu Script       "
+	echo "-----------------------------------------"
+	echo "Thanks for updating Hiratechi's autoscript!"
+	echo "The script was successfully updated to its latest version"
+	echo " "
+	echo "     [ MENU ]"
+	echo "1. Go Back"
+	read -p "Type 1 to go back : " option2
+	case $option2 in
+		1)
+		clear
+		exit
+		;;
+	esac
+done
+cd
