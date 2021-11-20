@@ -3,11 +3,11 @@
 
 
 FILE* config,* cer;
-char uuid[40],sni[30];
+char uuid [40], sni [30] ;
 int mode;
 
-int main(){
-Menu:UI();
+int main () {
+Menu: UI ();
     system("clear");
     if (mode == 1) {
         install_xray();
@@ -18,16 +18,16 @@ Menu:UI();
         system("systemctl stop nginx");
         system("systemctl start xray");
         system("systemctl start nginx");
-        printf("正在检测xray与nginx运行状态，以下输出不为空则运行正常！\n");
-        printf("--------------以下输出不为空则xray运行正常------------------\n");
+        printf( " Detecting the running status of xray and nginx, if the following output is not empty, it runs normally!\n " ) ;
+        printf( " -------------- If the following output is not empty, xray runs normally ------------------\n " ) ;
         system("ss -lp | grep xray");
-        printf("\n--------------以下输出不为空则nginx运行正常------------------\n");
+        printf( " \n-------------- If the following output is not empty, nginx is running normally------------------\n " ) ;
         system("ss -lp | grep nginx");
         printf("--------------------------------------------------------\n");
         goto Menu;
     }
     else if (mode == 3) {
-        printf("Vmess链接:\n\n");
+        printf( " Vmess link:\n\n " ) ;
         system("bash /usr/local/etc/xray/code_gen.sh");
         printf("\n");
         goto Menu;
@@ -36,10 +36,10 @@ Menu:UI();
         system("vi /usr/local/etc/xray/config.json");
         system("systemctl restart xray");
         system("systemctl restart nginx");
-        printf("正在检测xray与nginx运行状态，以下输出不为空则运行正常！\n");
-        printf("--------------以下输出不为空则xray运行正常------------------\n");
+        printf( " Detecting the running status of xray and nginx, if the following output is not empty, it runs normally!\n " ) ;
+        printf( " -------------- If the following output is not empty, xray runs normally ------------------\n " ) ;
         system("ss -lp | grep xray");
-        printf("\n--------------以下输出不为空则nginx运行正常------------------\n");
+        printf( " \n-------------- If the following output is not empty, nginx is running normally------------------\n " ) ;
         system("ss -lp | grep nginx");
         printf("--------------------------------------------------------\n");
         goto Menu;
@@ -48,20 +48,20 @@ Menu:UI();
         system("vi /etc/nginx/conf.d/default.conf");
         system("systemctl restart xray");
         system("systemctl restart nginx");
-        printf("正在检测xray与nginx运行状态，以下输出不为空则运行正常！\n");
-        printf("--------------以下输出不为空则xray运行正常------------------\n");
+        printf( " Detecting the running status of xray and nginx, if the following output is not empty, it runs normally!\n " ) ;
+        printf( " -------------- If the following output is not empty, xray runs normally ------------------\n " ) ;
         system("ss -lp | grep xray");
-        printf("\n--------------以下输出不为空则nginx运行正常------------------\n");
+        printf( " \n-------------- If the following output is not empty, nginx is running normally------------------\n " ) ;
         system("ss -lp | grep nginx");
         printf("--------------------------------------------------------\n");
         goto Menu;
     }
     else if (mode == 6) {
         if (fopen("/root/1.pem", "r") == NULL || fopen("/root/2.pem", "r") == NULL) {
-            printf("检测到证书与私钥文件未按照规定方式放置于根目录，强制退出！\n");
+            printf( "It is detected that the certificate and private key files are not placed in the root directory in the prescribed manner, force exit!\n " ) ;
             exit(0);
         }
-        printf("请输入已绑定此服务器ip的新域名:");
+        printf( " Please enter the new domain name bound to this server ip: " ) ;
         scanf("%s", sni);
         config = fopen("/usr/local/etc/sni.conf", "w");
         fprintf(config, "%s", sni);
@@ -69,29 +69,29 @@ Menu:UI();
         config = fopen("/usr/local/etc/xray/uuid.conf", "r");
         fscanf(config, "%s", uuid);
         fclose(config);
-        printf("正在复制SSL证书与私钥. . .\n");
+        printf( " Copying SSL certificate and private key...\n " ) ;
         system("cp -rf /root/1.pem /usr/local/etc/xray/certificate.pem");
         system("cp -rf /root/2.pem /usr/local/etc/xray/private.pem");
-        printf("正在配置html网页. . .\n");
+        printf( " Configuring html webpage...\n " ) ;
         config = fopen("/etc/nginx/conf.d/default.conf", "w");
         fprintf(config, "server {\n");
         fprintf(config, "    server_name %s;\n", sni);
         fclose(config);
         system("curl https://cdn.jsdelivr.net/gh/HXHGTS/xray-websocket-tls-nginx/default.conf >> /etc/nginx/conf.d/default.conf");
         system("systemctl restart nginx");
-        printf("正在检测xray与nginx运行状态，以下输出不为空则运行正常！\n");
-        printf("--------------以下输出不为空则xray运行正常------------------\n");
+        printf( " Detecting the running status of xray and nginx, if the following output is not empty, it runs normally!\n " ) ;
+        printf( " -------------- If the following output is not empty, xray runs normally ------------------\n " ) ;
         system("ss -lp | grep xray");
-        printf("\n--------------以下输出不为空则nginx运行正常------------------\n");
+        printf( " \n-------------- If the following output is not empty, nginx is running normally------------------\n " ) ;
         system("ss -lp | grep nginx");
         printf("--------------------------------------------------------\n");
-        printf("xray部署完成！\n");
-        printf("Vmess链接:\n\n");
+        printf( " xray deployment completed!\n " ) ;
+        printf( " Vmess link:\n\n " ) ;
         system("bash /usr/local/etc/xray/code_gen.sh");
         goto Menu;
     }
     else if (mode == 7) {
-        printf("正在更新xray主程序. . .\n");
+        printf( " Update xray main program...\n " ) ;
         system("systemctl stop xray");
         system("systemctl stop nginx");
         system("wget https://cdn.jsdelivr.net/gh/XTLS/Xray-install/install-release.sh -O install-release.sh");
@@ -100,11 +100,11 @@ Menu:UI();
         system("systemctl start xray");
         system("systemctl start nginx");
         system("rm -rf install-release.sh");
-        printf("xray主程序更新完成！\n");
-        printf("正在检测xray与nginx运行状态，以下输出不为空则运行正常！\n");
-        printf("--------------以下输出不为空则xray运行正常------------------\n");
+        printf( " xray main program update complete!\n " ) ;
+        printf( " Detecting the running status of xray and nginx, if the following output is not empty, it runs normally!\n " ) ;
+        printf( " -------------- If the following output is not empty, xray runs normally ------------------\n " ) ;
         system("ss -lp | grep xray");
-        printf("\n--------------以下输出不为空则nginx运行正常------------------\n");
+        printf( " \n-------------- If the following output is not empty, nginx is running normally------------------\n " ) ;
         system("ss -lp | grep nginx");
         printf("--------------------------------------------------------\n");
         goto Menu;
@@ -120,18 +120,18 @@ Menu:UI();
     return 0;
 }
 
-int UI() {
+int UI () {
     printf("-----------------------------------------------------------\n");
-    printf("----------------------xray安装工具-----------------------\n");
+    printf( " ----------------------xray installation tool---------------------- -\n " ) ;
     printf("-----------------------------------------------------------\n");
-    printf("安装前或需要更新SSL证书，请将证书(*.cer/*.crt/*.pem)与私钥(*.key/*.pem)分别命名为1.pem与2.pem，上传至服务器/root目录\n");
+    printf( " Before installation or need to update the SSL certificate, please name the certificate (*.cer/*.crt/*.pem) and private key (*.key/*.pem) respectively as 1.pem and 2.pem, Upload to the server/root directory\n " ) ;
     printf("-----------------------------------------------------------\n");
-    printf("----------------------当前Kernel版本-----------------------\n");
+    printf( " ----------------------Current Kernel version---------------------- -\n " ) ;
     system("uname -sr");
     printf("-----------------------------------------------------------\n");
-    printf("1.安装xray\n2.运行xray\n3.显示配置\n4.修改xray配置\n5.修改nginx配置\n6.更新域名与SSL证书\n7.更新xray\n8.关闭xray\n0.退出\n");
+    printf( " 1. Install xray\n2. Run xray\n3. Display configuration\n4. Modify xray configuration\n5. Modify nginx configuration\n6. Update domain name and SSL certificate\n7. Update xray\n8. Close xray\n0. Exit\n " ) ;
     printf("-----------------------------------------------------------\n");
-    printf("请输入:");
+    printf( " Please enter: " ) ;
     scanf("%d", &mode);
     return 0;
 }
@@ -143,19 +143,19 @@ int install_xray() {
     fclose(config);
     system("setenforce 0");
     system("apt-get install -y nginx dnsutils");
-    printf("正在运行xray安装脚本. . .\n");
+    printf( "The xray installation script is running...\n " ) ;
     system("wget https://cdn.jsdelivr.net/gh/XTLS/Xray-install/install-release.sh -O install-release.sh");
     system("chmod +x install-release.sh");
     system("bash install-release.sh");
     system("sleep 3");
     system("rm -rf install-release.sh");
     system("rm -rf TCPO.sh");
-    printf("正在复制SSL证书与私钥. . .\n");
+    printf( " Copying SSL certificate and private key...\n " ) ;
     system("cp -rf /root/1.pem /usr/local/etc/xray/certificate.pem");
     system("cp -rf /root/2.pem /usr/local/etc/xray/private.pem");
-    printf("正在生成配置文件. . .\n");
+    printf( " Generating configuration file...\n " ) ;
     system("curl https://cdn.jsdelivr.net/gh/HXHGTS/xray-websocket-tls-nginx/config.json.1 > /usr/local/etc/xray/config.json");
-    printf("正在生成UUID. . .\n");
+    printf( " UUID is being generated...\n " ) ;
     system("xray uuid > /usr/local/etc/xray/uuid.conf");
     config = fopen("/usr/local/etc/xray/uuid.conf", "r");
     fscanf(config, "%s", uuid);
@@ -164,16 +164,16 @@ int install_xray() {
     fprintf(config, "       \"id\": \"%s\"\n", uuid);
     fclose(config);
     system("curl https://cdn.jsdelivr.net/gh/HXHGTS/xray-websocket-tls-nginx/config.json.2 >> /usr/local/etc/xray/config.json");
-    printf("正在配置html网页. . .\n");
+    printf( " Configuring html webpage...\n " ) ;
     config = fopen("/etc/nginx/conf.d/default.conf", "w");
     fprintf(config, "server {\n");
     fprintf(config, "    server_name %s;\n",sni);
     fclose(config);
     system("curl https://cdn.jsdelivr.net/gh/HXHGTS/xray-websocket-tls-nginx/default.conf >> /etc/nginx/conf.d/default.conf");
-    printf("正在启动xray并将xray写入开机引导项. . .\n");
+    printf( " Starting xray and writing xray to boot entry...\n " ) ;
     system("systemctl enable xray");
     system("systemctl start xray");
-    printf("正在启动nginx并将nginx写入开机引导项. . .\n");
+    printf( " Starting nginx and writing nginx to boot entry...\n " ) ;
     system("echo [Service]> /etc/systemd/system/nginx.service.d/override.conf");
     system("echo ExecStartPost=/bin/sleep 0.1>> /etc/systemd/system/nginx.service.d/override.conf");
     system("semanage port -a -t http_port_t  -p tcp 2053");
@@ -182,14 +182,14 @@ int install_xray() {
     system("setsebool -P httpd_can_network_connect 1");
     system("systemctl daemon-reload");
     system("systemctl restart nginx.service");
-    printf("正在检测xray与nginx运行状态，以下输出不为空则运行正常！\n");
-    printf("--------------以下输出不为空则xray运行正常------------------\n");
+    printf( " Detecting the running status of xray and nginx, if the following output is not empty, it runs normally!\n " ) ;
+    printf( " -------------- If the following output is not empty, xray runs normally ------------------\n " ) ;
     system("ss -lp | grep xray");
-    printf("\n--------------以下输出不为空则nginx运行正常------------------\n");
+    printf( " \n-------------- If the following output is not empty, nginx is running normally------------------\n " ) ;
     system("ss -lp | grep nginx");
     printf("--------------------------------------------------------\n");
-    printf("xray部署完成！\n");
-    printf("Vmess链接:\n\n");
+    printf( " xray deployment completed!\n " ) ;
+    printf( " Vmess link:\n\n " ) ;
     system("bash /usr/local/etc/xray/code_gen.sh");
     return 0;
 }
@@ -197,10 +197,10 @@ int install_xray() {
 int KernelUpdate() {
     if ((fopen("KernelUpdate.sh", "r")) == NULL) {
         if (fopen("/root/1.pem", "r") == NULL || fopen("/root/2.pem", "r") == NULL) {
-        printf("检测到证书与私钥文件未按照规定方式放置于根目录，强制退出！\n");
+        printf( "It is detected that the certificate and private key files are not placed in the root directory in the prescribed manner, force exit!\n " ) ;
         exit(0);
     }
-    printf("请输入已绑定此服务器ip的域名:");
+    printf( " Please enter the domain name that has been bound to this server ip: " ) ;
     scanf("%s", sni);
     config = fopen("/usr/local/etc/sni.conf", "w");
     fprintf(config, "%s", sni);
