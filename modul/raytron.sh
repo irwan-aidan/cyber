@@ -73,7 +73,7 @@ check_release(){
             if [ ! -f "nginx-release-centos-7-0.el7.ngx.noarch.rpm" ]; then
                 red " $( date + " %Y-%m-%d %H:%M:%S " ) -failed to download nginx rpm package, continue to try again... "
             be
-        done
+        be
         rpm -ivh nginx-release-centos-7-0.el7.ngx.noarch.rpm --force --nodeps
         #logcmd "rpm -Uvh http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm --force --nodeps"
         #loggreen "Prepare to install nginx."
