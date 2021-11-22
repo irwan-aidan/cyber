@@ -62,5 +62,5 @@ listClients(){
 }
 listClients
 echo "-------------------------------";
-echo -e "By BANG IYAN STORES"
+echo -e "By VoltScript"
 
