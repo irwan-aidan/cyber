@@ -139,9 +139,9 @@ rm /etc/nginx/sites-enabled/default
 rm /etc/nginx/sites-available/default
 wget -O /etc/nginx/nginx.conf "https://raw.githubusercontent.com/dopekid30/AutoScriptDebian10/main/Resources/Other/nginx.conf"
 wget -O /etc/nginx/conf.d/vps.conf "https://raw.githubusercontent.com/dopekid30/AutoScriptDebian10/main/Resources/Other/vps.conf"
-wget -O /etc/nginx/conf.d/monitoring.conf "https://raw.githubusercontent.com/dopekid30/AutoScriptDebian10/main/Resources/Other/monitoring.conf"
+wget -O /etc/nginx/conf.d/monitoring.conf "https://raw.githubusercontent.com/kor8/cyber/beta/vpn/monitoring.conf"
 mkdir -p /home/vps/public_html
-wget -O /home/vps/public_html/index.php "https://raw.githubusercontent.com/dopekid30/AutoScriptDebian10/main/Resources/Panel/index.php"
+wget -O /home/vps/public_html/index.php "https://raw.githubusercontent.com/kor8/cyber/beta/vpn/index.php"
 service php7.0-fpm restart
 service nginx restart
 
@@ -178,8 +178,9 @@ cat <<mySquid > /etc/squid/squid.conf
 acl VPN dst $(wget -4qO- http://ipinfo.io/ip)
 http_access allow VPN
 http_access deny all 
-http_port 0.0.0.0:$Proxy_Port1
-http_port 0.0.0.0:$Proxy_Port2
+http_port 0.0.0.0:8000
+http_port 0.0.0.0:8181
+http_port 0.0.0.0:3128
 coredump_dir /var/spool/squid
 refresh_pattern ^ftp: 1440 20% 10080
 refresh_pattern ^gopher: 1440 0% 1440
