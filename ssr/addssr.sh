@@ -19,7 +19,7 @@ fi
 ssr_password="$ssr_user"
 ssr_method="aes-256-cfb"
 ssr_protocol="origin"
-ssr_obfs="tls1.2_ticket_auth_compatible"
+ssr_obfs="http_simple_compatible"
 ssr_protocol_param="2"
 ssr_speed_limit_per_con=0
 ssr_speed_limit_per_user=0
