@@ -1,5 +1,5 @@
-port 1194
-proto tcp4
+port 5300
+proto udp4
 dev tun
 tun-mtu 1500
 mssfix 1500
@@ -8,6 +8,8 @@ ca keys/ca.crt
 cert keys/VoltVpn.crt
 key keys/VoltVpn.key
 dh keys/dh2048.pem
+duplicate-cn
+ncp-disable
 
 plugin /usr/lib/openvpn/openvpn-plugin-auth-pam.so login
 username-as-common-name
@@ -15,7 +17,7 @@ client-cert-not-required
 cipher none
 auth none
 
-server 10.6.0.0 255.255.255.0
+server 10.7.0.0 255.255.255.0
 push "redirect-gateway def1"
 push "dhcp-option DNS 8.8.8.8"
 push "dhcp-option DNS 8.8.4.4"
