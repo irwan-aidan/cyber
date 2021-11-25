@@ -68,7 +68,7 @@ server {
     ssl_protocols         TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;
     ssl_ciphers           HIGH:!aNULL:!MD5;
     server_name           $domain;
-    location /v2ray/ {
+    location /ws/ {
         proxy_redirect off;
         proxy_pass http://127.0.0.1:10000;
         proxy_http_version 1.1;
