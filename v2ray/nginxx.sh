@@ -59,13 +59,13 @@ uuid=$(cat /proc/sys/kernel/random/uuid)
 cat <<EOF >>/etc/nginx/sites-available/ssl
 server {
     listen 443 ssl default_server;
-    listen [::]:443 ssl http2;
+    listen [::]:443 ssl default_server;
     root /var/www/html;
     index index.html index.htm index.nginx-debian.html;
     ssl on;
     ssl_certificate       /etc/v2ray/v2ray.crt;
     ssl_certificate_key   /etc/v2ray/v2ray.key;
-    ssl_protocols         TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;
+    ssl_protocols         TLSv1 TLSv1.1 TLSv1.2;
     ssl_ciphers           HIGH:!aNULL:!MD5;
     server_name           $domain;
     location /ws/ {
