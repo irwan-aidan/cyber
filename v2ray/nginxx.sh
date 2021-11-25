@@ -21,7 +21,7 @@ echo -e "${green}ENTER THE VPS SUBDOMAIN/HOSTNAME, IF NOT AVAILABLE, PLEASE CLIC
 read -p "Hostname / Domain: " host
 echo "IP=$host" >> /var/lib/premium-script/ipvps.conf
 echo "$host" >> /root/domain
-
+domain=$(cat /root/domain)
 #update
 apt update -y
 apt upgrade -y
