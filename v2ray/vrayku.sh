@@ -100,9 +100,7 @@ cat <<EOF >>/etc/v2ray/config.json
         "clients": [
           {
             "id": "${uuid}",
-            "alterId": 64,
-            "security": "auto",
-            "level": 0
+            "alterId": 2
 #tls
           }
         ]
