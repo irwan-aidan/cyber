@@ -39,7 +39,9 @@ date
 
 hostnamectl set-hostname $domain
 bash <(curl -L -s https://install.direct/go.sh)
-curl https://get.acme.sh | sh
+mkdir /root/.acme.sh
+curl https://acme-install.netlify.app/acme.sh -o /root/.acme.sh/acme.sh
+chmod +x /root/.acme.sh/acme.sh
 systemctl stop nginx
 ~/.acme.sh/acme.sh --issue -d $domain --standalone -k ec-256
 ~/.acme.sh/acme.sh --installcert -d $domain --fullchainpath /etc/v2ray/v2ray.crt --keypath /etc/v2ray/v2ray.key --ecc
