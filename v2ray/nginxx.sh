@@ -35,7 +35,7 @@ domain=$(cat /root/domain)
 hostnamectl set-hostname $domain
 apt-get install netfilter-persistent -y
 apt install curl xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils lsb-release -y 
-apt install socat cron bash-completion ntpdate -y
+apt install cron bash-completion ntpdate -y
 ntpdate pool.ntp.org
 apt -y install chrony
 timedatectl set-ntp true
@@ -59,13 +59,13 @@ uuid=$(cat /proc/sys/kernel/random/uuid)
 cat <<EOF >>/etc/nginx/sites-available/ssl
 server {
     listen 443 ssl default_server;
-    listen [::]:443 ssl default_server;
+    listen [::]:443 ssl http2;
     root /var/www/html;
     index index.html index.htm index.nginx-debian.html;
     ssl on;
     ssl_certificate       /etc/v2ray/v2ray.crt;
     ssl_certificate_key   /etc/v2ray/v2ray.key;
-    ssl_protocols         TLSv1 TLSv1.1 TLSv1.2;
+    ssl_protocols         TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;
     ssl_ciphers           HIGH:!aNULL:!MD5;
     server_name           $domain;
     location /v2ray/ {
@@ -82,8 +82,7 @@ server {
 EOF
 ln -s /etc/nginx/sites-available/ssl /etc/nginx/sites-enabled/
 rm -f /etc/v2ray/config.json
-
-cat> /etc/v2ray/config.json << END
+cat <<EOF >>/etc/v2ray/config.json
 {
   "log": {
     "access": "/var/log/v2ray/access.log",
@@ -99,177 +98,29 @@ cat> /etc/v2ray/config.json << END
         "clients": [
           {
             "id": "${uuid}",
-            "alterId": 32
+            "alterId": 64,
+            "security": "auto",
+            "level": 0
 #tls
           }
         ]
       },
       "streamSettings": {
         "network": "ws",
-        "security": "tls",
-        "tlsSettings": {
-          "certificates": [
-            {
-              "certificateFile": "etc/v2ray/v2ray.crt",
-              "keyFile": "/etc/v2ray/v2ray.key"
-            }
-          ]
-        },
         "wsSettings": {
-          "path": "/v2ray/",
-          "headers": {
-            "Host": ""
-          }
-         },
-        "quicSettings": {},
-        "sockopt": {
-          "mark": 0,
-          "tcpFastOpen": true
+          "path": "/ws/"
         }
-      },
-      "sniffing": {
-        "enabled": true,
-        "destOverride": [
-          "http",
-          "tls"
-        ]
-      },
-      "domain": "$domain"
+      }
     }
   ],
   "outbounds": [
     {
       "protocol": "freedom",
       "settings": {}
-    },
-    {
-      "protocol": "blackhole",
-      "settings": {},
-      "tag": "blocked"
     }
-  ],
-  "routing": {
-    "rules": [
-      {
-        "type": "field",
-        "ip": [
-          "0.0.0.0/8",
-          "10.0.0.0/8",
-          "100.64.0.0/10",
-          "169.254.0.0/16",
-          "172.16.0.0/12",
-          "192.0.0.0/24",
-          "192.0.2.0/24",
-          "192.168.0.0/16",
-          "198.18.0.0/15",
-          "198.51.100.0/24",
-          "203.0.113.0/24",
-          "::1/128",
-          "fc00::/7",
-          "fe80::/10"
-        ],
-        "outboundTag": "blocked"
-      },
-      {
-        "type": "field",
-        "outboundTag": "blocked",
-        "protocol": [
-          "bittorrent"
-        ]
-      }
-    ]
-  }
+  ]
 }
-END
-cat> /etc/v2ray/none.json << END
-{
-  "log": {
-    "access": "/var/log/v2ray/access.log",
-    "error": "/var/log/v2ray/error.log",
-    "loglevel": "info"
-  },
-  "inbounds": [
-    {
-      "port": 10000,
-      "listen":"127.0.0.1",
-      "protocol": "vmess",
-      "settings": {
-        "clients": [
-          {
-            "id": "${uuid}",
-            "alterId": 32
-#none
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "ws",
-        "wsSettings": {
-          "path": "/v2ray/",
-          "headers": {
-            "Host": ""
-          }
-         },
-        "quicSettings": {},
-        "sockopt": {
-          "mark": 0,
-          "tcpFastOpen": true
-        }
-      },
-      "sniffing": {
-        "enabled": true,
-        "destOverride": [
-          "http",
-          "tls"
-        ]
-      },
-      "domain": "$domain"
-    }
-  ],
-  "outbounds": [
-    {
-      "protocol": "freedom",
-      "settings": {}
-    },
-    {
-      "protocol": "blackhole",
-      "settings": {},
-      "tag": "blocked"
-    }
-  ],
-  "routing": {
-    "rules": [
-      {
-        "type": "field",
-        "ip": [
-          "0.0.0.0/8",
-          "10.0.0.0/8",
-          "100.64.0.0/10",
-          "169.254.0.0/16",
-          "172.16.0.0/12",
-          "192.0.0.0/24",
-          "192.0.2.0/24",
-          "192.168.0.0/16",
-          "198.18.0.0/15",
-          "198.51.100.0/24",
-          "203.0.113.0/24",
-          "::1/128",
-          "fc00::/7",
-          "fe80::/10"
-        ],
-        "outboundTag": "blocked"
-      },
-      {
-        "type": "field",
-        "outboundTag": "blocked",
-        "protocol": [
-          "bittorrent"
-        ]
-      }
-    ]
-  }
-}
-END
+EOF
 
 iptables -A INPUT -p tcp  --match multiport --dports 443,80 -j ACCEPT
 iptables -A INPUT -p udp  --match multiport --dports 443,80 -j ACCEPT
@@ -282,8 +133,6 @@ iptables-restore -t < /etc/iptables.up.rules
 netfilter-persistent save
 netfilter-persistent reload
 systemctl daemon-reload
-systemctl enable v2ray@none.service
-systemctl start v2ray@none.service
 systemctl restart nginx
 systemctl enable nginx
 systemctl restart v2ray
