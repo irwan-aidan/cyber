@@ -1,3 +1,26 @@
+# Check Root
+if [ "${EUID}" -ne 0 ]; then
+echo "You need to run this script as root"
+exit 1
+fi
+
+# Check System
+if [ "$(systemd-detect-virt)" == "openvz" ]; then
+echo "OpenVZ is not supported"
+exit 1
+fi
+
+# Colours
+red='\e[1;31m'
+green='\e[0;32m'
+NC='\e[0m'
+
+# Subdomain Settings
+mkdir /var/lib/premium-script;
+echo -e "${green}ENTER THE VPS SUBDOMAIN/HOSTNAME, IF NOT AVAILABLE, PLEASE CLICK ENTER${NC}"
+read -p "Hostname / Domain: " host
+echo "IP=$host" >> /var/lib/premium-script/ipvps.conf
+echo "$host" >> /root/domain
 domain=$(cat /root/domain)
 apt-get update && apt-get -y upgrade
 apt-get -y install nginx socat
