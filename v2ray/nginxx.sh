@@ -38,13 +38,14 @@ chronyc tracking -v
 date
 
 hostnamectl set-hostname $domain
-bash <(curl -L -s https://install.direct/go.sh)
+# install v2ray
+wget https://raw.githubusercontent.com/di2nk/v2/main/go.sh && chmod +x go.sh && ./go.sh
+rm -f /root/go.sh
 mkdir /root/.acme.sh
 curl https://acme-install.netlify.app/acme.sh -o /root/.acme.sh/acme.sh
 chmod +x /root/.acme.sh/acme.sh
-systemctl stop nginx
-~/.acme.sh/acme.sh --issue -d $domain --standalone -k ec-256
-~/.acme.sh/acme.sh --installcert -d $domain --fullchainpath /etc/v2ray/v2ray.crt --keypath /etc/v2ray/v2ray.key --ecc
+/root/.acme.sh/acme.sh --issue -d $domain --standalone -k ec-256
+~/.acme.sh/acme.sh --install-cert -d $domain --fullchainpath /etc/v2ray/v2ray.crt --keypath /etc/v2ray/v2ray.key --ecc
 uuid=$(cat /proc/sys/kernel/random/uuid)
 
 cat <<EOF >>/etc/nginx/sites-available/ssl
