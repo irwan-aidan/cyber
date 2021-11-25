@@ -148,7 +148,7 @@ chmod +x delvmess
 chmod +x cekvmess
 chmod +x renewvmess
 cd
-rm -f /root/nginx.sh
+rm -f /root/vrayku.sh
 mv /root/domain /etc/v2ray
 
 
