@@ -104,7 +104,7 @@ cat <<EOF >>/etc/v2ray/config.json
         "clients": [
           {
             "id": "${uuid}",
-            "alterId": 2
+            "alterId": 32
 #tls
           }
         ]
@@ -142,7 +142,7 @@ cat <<EOF >>/etc/v2ray/none.json
         "clients": [
           {
             "id": "${uuid}",
-            "alterId": 2
+            "alterId": 32
 #none
           }
         ]
