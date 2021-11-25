@@ -13,12 +13,9 @@ chronyc sourcestats -v
 chronyc tracking -v
 date
 
-mkdir -p /etc/trojan/
-touch /etc/trojan/akun.conf
 # install v2ray
 wget https://raw.githubusercontent.com/muhamadparizan/ahahk/main/go.sh && chmod +x go.sh && ./go.sh
 rm -f /root/go.sh
-bash -c "$(wget -O- https://raw.githubusercontent.com/trojan-gfw/trojan-quickstart/master/trojan-quickstart.sh)"
 wget https://raw.githubusercontent.com/kor8/cyber/beta/v2ray/nginx.sh && chmod +x nginx.sh && ./nginx.sh
 service squid start
 uuid=$(cat /proc/sys/kernel/random/uuid)
