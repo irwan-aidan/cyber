@@ -40,11 +40,11 @@ cat>/etc/v2ray/$user-tls.json<<EOF
       "v": "2",
       "ps": "${user}",
       "add": "${domain}",
-      "port": "${tls}",
+      "port": "443",
       "id": "${uuid}",
       "aid": "32",
       "net": "ws",
-      "path": "/v2ray",
+      "path": "/v2ray/",
       "type": "none",
       "host": "",
       "tls": "tls"
@@ -55,43 +55,16 @@ cat>/etc/v2ray/$user-none.json<<EOF
       "v": "2",
       "ps": "${user}",
       "add": "${domain}",
-      "port": "${none}",
+      "port": "80",
       "id": "${uuid}",
       "aid": "32",
       "net": "ws",
-      "path": "/v2ray",
+      "path": "/v2ray/",
       "type": "none",
       "host": "",
       "tls": "none"
 }
 EOF
-
-# Make File For Clash
-cp /etc/darknet/clash-nontls.yaml /home/vps/public_html/clash/${user}-nontls.yaml
-
-# Input Username to clash configuration
-sed -i "s/darknet1/$user/g" /home/vps/public_html/clash/${user}-nontls.yaml
-sed -i "s/darknet2/$domain/g" /home/vps/public_html/clash/${user}-nontls.yaml
-sed -i "s/darknet3/$none/g" /home/vps/public_html/clash/${user}-nontls.yaml
-sed -i "s/darknet4/vmess/g" /home/vps/public_html/clash/${user}-nontls.yaml
-sed -i "s/darknet5/$uuid/g" /home/vps/public_html/clash/${user}-nontls.yaml
-sed -i "s/darknet6/32/g" /home/vps/public_html/clash/${user}-nontls.yaml
-sed -i "s/darknet7/auto/g" /home/vps/public_html/clash/${user}-nontls.yaml
-sed -i "s/darknet8/$domain/g" /home/vps/public_html/clash/${user}-nontls.yaml
-
-# Make File For Clash ( TLS )
-cp /etc/darknet/clash-tls.yaml /home/vps/public_html/clash/${user}-tls.yaml
-
-# Input Username to clash configuration
-sed -i "s/darknet1/$user/g" /home/vps/public_html/clash/${user}-tls.yaml
-sed -i "s/darknet2/$domain/g" /home/vps/public_html/clash/${user}-tls.yaml
-sed -i "s/darknet3/$tls/g" /home/vps/public_html/clash/${user}-tls.yaml
-sed -i "s/darknet4/vmess/g" /home/vps/public_html/clash/${user}-tls.yaml
-sed -i "s/darknet5/$uuid/g" /home/vps/public_html/clash/${user}-tls.yaml
-sed -i "s/darknet6/32/g" /home/vps/public_html/clash/${user}-tls.yaml
-sed -i "s/darknet7/auto/g" /home/vps/public_html/clash/${user}-tls.yaml
-sed -i "s/darknet8/$domain/g" /home/vps/public_html/clash/${user}-tls.yaml
-
 
 vmess_base641=$( base64 -w 0 <<< $vmess_json1)
 vmess_base642=$( base64 -w 0 <<< $vmess_json2)
@@ -105,21 +78,17 @@ echo -e ""
 echo -e "==========-V2RAY/VMESS-=========="
 echo -e "Remarks        : ${user}"
 echo -e "Domain         : ${domain}"
-echo -e "port TLS       : ${tls}"
-echo -e "port none TLS  : ${none}"
+echo -e "port TLS       : 443"
+echo -e "port none TLS  : 80"
 echo -e "id             : ${uuid}"
 echo -e "alterId        : 32"
 echo -e "Security       : auto"
 echo -e "network        : ws"
-echo -e "path           : /v2ray"
+echo -e "path           : /v2ray/"
 echo -e "================================="
 echo -e "link TLS       : ${vmesslink1}"
 echo -e "================================="
 echo -e "link none TLS  : ${vmesslink2}"
-echo -e "================================="
-echo -e "Link Yaml NTLS : http://${domain}:81/clash/${user}-nontls.yaml"
-echo -e "================================="
-echo -e "Link Yaml TLS  : http://${domain}:81/clash/${user}-tls.yaml"
 echo -e "================================="
 echo -e "Expired On     : $exp"
 echo -e "Script By Darknet"
