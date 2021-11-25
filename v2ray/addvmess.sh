@@ -42,9 +42,9 @@ cat>/etc/v2ray/$user-tls.json<<EOF
       "add": "${domain}",
       "port": "443",
       "id": "${uuid}",
-      "aid": "32",
+      "aid": "64",
       "net": "ws",
-      "path": "/v2ray/",
+      "path": "/ws/",
       "type": "none",
       "host": "",
       "tls": "tls"
@@ -55,11 +55,11 @@ cat>/etc/v2ray/$user-none.json<<EOF
       "v": "2",
       "ps": "${user}",
       "add": "${domain}",
-      "port": "80",
+      "port": "888",
       "id": "${uuid}",
-      "aid": "32",
+      "aid": "64",
       "net": "ws",
-      "path": "/v2ray/",
+      "path": "/ws/",
       "type": "none",
       "host": "",
       "tls": "none"
@@ -81,7 +81,7 @@ echo -e "Domain         : ${domain}"
 echo -e "port TLS       : 443"
 echo -e "port none TLS  : 80"
 echo -e "id             : ${uuid}"
-echo -e "alterId        : 32"
+echo -e "alterId        : 64"
 echo -e "Security       : auto"
 echo -e "network        : ws"
 echo -e "path           : /v2ray/"
