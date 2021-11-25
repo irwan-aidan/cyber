@@ -253,4 +253,17 @@ systemctl enable nginx
 systemctl restart v2ray
 systemctl enable v2ray
 
+cd /usr/bin
+wget -O addvmess "https://raw.githubusercontent.com/D-Xtream/unstable/beta/add/addvmess.sh"
+wget -O delvmess "https://raw.githubusercontent.com/D-Xtream/unstable/beta/del/delvmess.sh"
+wget -O cekvmess "https://raw.githubusercontent.com/D-Xtream/unstable/beta/cek/cekvmess.sh"
+wget -O renewvmess "https://raw.githubusercontent.com/D-Xtream/unstable/beta/renew/renewvmess.sh"
+chmod +x addvmess
+chmod +x delvmess
+chmod +x cekvmess
+chmod +x renewvmess
+cd
+rm -f /root/nginx.sh
+mv /root/domain /etc/v2ray
+
 
