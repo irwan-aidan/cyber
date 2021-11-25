@@ -29,7 +29,7 @@ apt dist-upgrade -y
 apt-get remove --purge ufw firewalld -y
 apt-get remove --purge exim4 -y
 apt-get update && apt-get -y upgrade
-apt-get -y install nginx socat
+apt-get -y install nginx socat unzip curl git wget
 
 domain=$(cat /root/domain)
 hostnamectl set-hostname $domain
