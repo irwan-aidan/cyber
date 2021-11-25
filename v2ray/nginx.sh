@@ -260,6 +260,8 @@ cat> /etc/v2ray/none.json << END
 }
 END
 
+iptables -A INPUT -p tcp  --match multiport --dports 443,80 -j ACCEPT
+iptables -A INPUT -p udp  --match multiport --dports 443,80 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 443 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 443 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT
