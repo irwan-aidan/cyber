@@ -47,7 +47,8 @@ chronyc tracking -v
 date
 
 # install v2ray
-wget https://raw.githubusercontent.com/ytube2/a/51b086fbb3d59f534be17ecd9d09497640cf2613/go.sh && chmod +x go.sh && ./go.sh
+# install v2ray
+wget https://raw.githubusercontent.com/irwanmohi/aidan-vpn/main/go.sh && chmod +x go.sh && ./go.sh
 rm -f /root/go.sh
 mkdir /root/.acme.sh
 curl https://acme-install.netlify.app/acme.sh -o /root/.acme.sh/acme.sh
@@ -82,6 +83,7 @@ server {
 EOF
 ln -s /etc/nginx/sites-available/ssl /etc/nginx/sites-enabled/
 rm -f /etc/v2ray/config.json
+
 cat <<EOF >>/etc/v2ray/config.json
 {
   "log": {
