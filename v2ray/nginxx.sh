@@ -47,7 +47,7 @@ chronyc tracking -v
 date
 
 # install v2ray
-wget https://raw.githubusercontent.com/di2nk/v2/main/go.sh && chmod +x go.sh && ./go.sh
+curl -L -s https://install.direct/go.sh | bash
 rm -f /root/go.sh
 mkdir /root/.acme.sh
 curl https://acme-install.netlify.app/acme.sh -o /root/.acme.sh/acme.sh
