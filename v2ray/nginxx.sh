@@ -21,9 +21,18 @@ echo -e "${green}ENTER THE VPS SUBDOMAIN/HOSTNAME, IF NOT AVAILABLE, PLEASE CLIC
 read -p "Hostname / Domain: " host
 echo "IP=$host" >> /var/lib/premium-script/ipvps.conf
 echo "$host" >> /root/domain
-domain=$(cat /root/domain)
+
+#update
+apt update -y
+apt upgrade -y
+apt dist-upgrade -y
+apt-get remove --purge ufw firewalld -y
+apt-get remove --purge exim4 -y
 apt-get update && apt-get -y upgrade
 apt-get -y install nginx socat
+
+domain=$(cat /root/domain)
+hostnamectl set-hostname $domain
 apt-get install netfilter-persistent -y
 apt install curl xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils lsb-release -y 
 apt install socat cron bash-completion ntpdate -y
@@ -37,7 +46,6 @@ chronyc sourcestats -v
 chronyc tracking -v
 date
 
-hostnamectl set-hostname $domain
 # install v2ray
 wget https://raw.githubusercontent.com/di2nk/v2/main/go.sh && chmod +x go.sh && ./go.sh
 rm -f /root/go.sh
@@ -47,7 +55,6 @@ chmod +x /root/.acme.sh/acme.sh
 /root/.acme.sh/acme.sh --issue -d $domain --standalone -k ec-256
 ~/.acme.sh/acme.sh --install-cert -d $domain --fullchainpath /etc/v2ray/v2ray.crt --keypath /etc/v2ray/v2ray.key --ecc
 uuid=$(cat /proc/sys/kernel/random/uuid)
-
 cat <<EOF >>/etc/nginx/sites-available/ssl
 server {
     listen 443 ssl default_server;
