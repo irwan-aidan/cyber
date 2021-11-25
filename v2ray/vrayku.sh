@@ -126,6 +126,44 @@ cat <<EOF >>/etc/v2ray/config.json
 }
 EOF
 
+cat <<EOF >>/etc/v2ray/none.json
+{
+  "log": {
+    "access": "/var/log/v2ray/access.log",
+    "error": "/var/log/v2ray/error.log",
+    "loglevel": "info"
+  },
+  "inbounds": [
+    {
+      "port": 10000,
+      "listen":"127.0.0.1",
+      "protocol": "vmess",
+      "settings": {
+        "clients": [
+          {
+            "id": "${uuid}",
+            "alterId": 2
+#none
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "ws",
+        "wsSettings": {
+          "path": "/ws/"
+        }
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "freedom",
+      "settings": {}
+    }
+  ]
+}
+EOF
+
 iptables -A INPUT -p tcp  --match multiport --dports 443,80 -j ACCEPT
 iptables -A INPUT -p udp  --match multiport --dports 443,80 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 443 -j ACCEPT
@@ -139,6 +177,8 @@ netfilter-persistent reload
 systemctl daemon-reload
 systemctl restart nginx
 systemctl enable nginx
+systemctl enable v2ray@none.service
+systemctl start v2ray@none.service
 systemctl restart v2ray
 systemctl enable v2ray
 
