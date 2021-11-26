@@ -98,7 +98,7 @@ cat> /etc/v2ray/config.json << END
       "settings": {
         "clients": [
           {
-            "id": "${uuid}",
+            "id": "b831381d-6324-4d53-ad4f-8cda48b30811",
             "alterId": 32
 #tls
           }
@@ -106,19 +106,8 @@ cat> /etc/v2ray/config.json << END
       },
       "streamSettings": {
         "network": "ws",
-        "security": "tls",
-        "tlsSettings": {
-          "certificates": [
-            {
-              "certificateFile": "etc/v2ray/v2ray.crt",
-              "keyFile": "/etc/v2ray/v2ray.key"
-            }
-          ]
-        },
         "wsSettings": {
-          "path": "/ws/",
-          "headers": {
-            "Host": ""
+          "path": "/ws/"
           }
          },
         "quicSettings": {},
@@ -134,7 +123,7 @@ cat> /etc/v2ray/config.json << END
           "tls"
         ]
       },
-      "domain": "$domain"
+      "domain": "dani.ovh.xvolt.tech"
     }
   ],
   "outbounds": [
