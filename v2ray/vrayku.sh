@@ -85,6 +85,11 @@ ln -s /etc/nginx/sites-available/ssl /etc/nginx/sites-enabled/
 rm -f /etc/v2ray/config.json
 cat> /etc/v2ray/config.json << END
 {
+  "log": {
+    "access": "/var/log/v2ray/access.log",
+    "error": "/var/log/v2ray/error.log",
+    "loglevel": "info"
+  },
   "inbounds": [
     {
       "port": 10000,
@@ -102,7 +107,7 @@ cat> /etc/v2ray/config.json << END
       "streamSettings": {
         "network": "ws",
         "wsSettings": {
-        "path": "/ws/"
+          "path": "/ws/"
         }
       }
     }
