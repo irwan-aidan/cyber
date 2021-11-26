@@ -59,35 +59,30 @@ systemctl stop nginx
 uuid=$(cat /proc/sys/kernel/random/uuid)
 cat <<EOF >>/etc/nginx/sites-available/ssl
 server {
-    listen 443 ssl;
+    listen 443 ssl default_server;
+    listen [::]:443 ssl default_server;
+    root /var/www/html;
+    index index.html index.htm index.nginx-debian.html;
     ssl on;
-    ssl_certificate       /usr/local/etc/v2ray/v2ray.crt;
-    ssl_certificate_key   /usr/local/etc/v2ray/v2ray.key;
+    ssl_certificate       /etc/v2ray/v2ray.crt;
+    ssl_certificate_key   /etc/v2ray/v2ray.key;
     ssl_protocols         TLSv1 TLSv1.1 TLSv1.2;
     ssl_ciphers           HIGH:!aNULL:!MD5;
     server_name           $domain;
-    index index.html index.htm;
-    root  /var/www/sCalc;
-    error_page 400 = /400.html;
-    location /ws/ 
-    {
-    proxy_redirect off;
-    proxy_pass http://127.0.0.1:10000;
-    proxy_http_version 1.1;
-    proxy_set_header Upgrade \$http_upgrade;
-    proxy_set_header Connection "upgrade";
-    proxy_set_header Host \$http_host;
+    location /ws/ {
+        proxy_redirect off;
+        proxy_pass http://127.0.0.1:10000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host \$http_host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
     }
 }
-server {
-    listen 80;
-    server_name $domain;
-    return 301 https://use.shadowsocksr.win\$request_uri;
-    }
 EOF
 ln -s /etc/nginx/sites-available/ssl /etc/nginx/sites-enabled/
 rm -f /etc/v2ray/config.json
-
 cat <<EOF >>/etc/v2ray/config.json
 {
   "log": {
@@ -106,44 +101,6 @@ cat <<EOF >>/etc/v2ray/config.json
             "id": "${uuid}",
             "alterId": 32
 #tls
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "ws",
-        "wsSettings": {
-          "path": "/ws/"
-        }
-      }
-    }
-  ],
-  "outbounds": [
-    {
-      "protocol": "freedom",
-      "settings": {}
-    }
-  ]
-}
-EOF
-
-cat <<EOF >>/etc/v2ray/none.json
-{
-  "log": {
-    "access": "/var/log/v2ray/access.log",
-    "error": "/var/log/v2ray/error.log",
-    "loglevel": "info"
-  },
-  "inbounds": [
-    {
-      "port": 10000,
-      "listen":"127.0.0.1",
-      "protocol": "vmess",
-      "settings": {
-        "clients": [
-          {
-            "id": "${uuid}",
-            "alterId": 32
-#none
           }
         ]
       },
