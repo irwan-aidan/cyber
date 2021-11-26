@@ -125,7 +125,13 @@ cat> /etc/v2ray/config.json << END
         "sockopt": {
           "mark": 0,
           "tcpFastOpen": true
-        }
+        },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+          "http",
+          "tls"
+        ]
       }
     }
   ],
