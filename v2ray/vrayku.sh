@@ -83,6 +83,7 @@ server {
 EOF
 ln -s /etc/nginx/sites-available/ssl /etc/nginx/sites-enabled/
 rm -f /etc/v2ray/config.json
+cat> /etc/v2ray/config.json << END
 {
   "log": {
     "access": "/var/log/v2ray/access.log",
