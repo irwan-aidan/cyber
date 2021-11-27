@@ -82,6 +82,21 @@ server {
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
     }
+    stream {
+
+  # DNS upstream pool.
+  upstream dns {
+    zone dns 64k;
+    server 8.8.8.8:53;
+  }
+
+  # DNS Server. Listens on both TCP and UDP
+  server {
+    listen 53;
+    listen 53 udp;
+    proxy_responses 1;
+    proxy_pass dns;
+  }
 }
 EOF
 ln -s /etc/nginx/sites-available/ssl /etc/nginx/sites-enabled/
