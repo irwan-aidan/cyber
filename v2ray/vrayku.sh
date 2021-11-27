@@ -89,62 +89,69 @@ rm -f /etc/v2ray/config.json
 cat <<EOF >>/etc/v2ray/config.json
 {
     "log": {
-        "access": "/usr/local/v2ray/access.log",
-        "error": "/usr/local/v2ray/error.log",
-        "loglevel": "warning"
+            "access": "/var/log/v2ray/access.log",
+            "error": "/var/log/v2ray/error.log",
+            "loglevel": "warning"
     },
-	"inbounds": [
-     {
-      "port": "10000",
-      "listen": "127.0.0.1",
-      "protocol": "vmess",
-      "settings": {
-        "clients": [
-          {
-            "id": "a4f7ef9b-6951-2397-098d-bb1e660b3805",
-            "alterId": 64
-#tls            
-          }
-         ]
-      },
-      "streamSettings": {
-        "network": "ws",
-        "wsSettings": {
-          "path": "/ws/"
-          }
-       }
-     }
-    ],
-    "outbounds": [
-     {
-        "protocol": "freedom",
-        "settings": {
-        }
-     }
-    ],
-	"dns": {
-		"server": [
-			"8.8.8.8",
-			"8.8.4.4",
-			"1.1.1.1",
-			"1.0.0.1",
-			"localhost"
-		]
-	},
-  "routing": {
-    "settings": {
-      "rules": [
+    "inbound": {
+            "port": 10000,
+            "protocol": "vmess",
+            "settings": {
+                    "clients": [{
+                            "id": "a4f7ef9b-6951-2397-098d-bb1e660b3805",
+                            "level": 1,
+                            "alterId": 64,
+                            "security": "auto"
+                    }]
+            },
+            "streamSettings":{
+                    "network":"ws",
+                    "security": "auto",
+                    "wsSettings":{
+                            "connectionReuse": true,
+                            "path": "/ws/"
+                            }
+                    }
+    },
+    "outbound": {
+            "protocol": "freedom",
+            "settings": {}
+    },
+	"outboundDetour": [
         {
-          "inboundTag": [
-            "api"
-          ],
-          "outboundTag": "api",
-          "type": "field"
+            "protocol": "blackhole",
+            "settings": {},
+            "tag": "blocked"
         }
-      ]
-    },
-    "strategy": "rules"
-  }
+    ],
+    "routing": {
+        "strategy": "rules",
+        "settings": {
+            "rules": [
+                {
+                    "type": "field",
+                    "ip": [
+                        "0.0.0.0/8",
+                        "10.0.0.0/8",
+                        "100.64.0.0/10",
+                        "127.0.0.0/8",
+                        "169.254.0.0/16",
+                        "172.16.0.0/12",
+                        "192.0.0.0/24",
+                        "192.0.2.0/24",
+                        "192.168.0.0/16",
+                        "198.18.0.0/15",
+                        "198.51.100.0/24",
+                        "203.0.113.0/24",
+                        "::1/128",
+                        "fc00::/7",
+                        "fe80::/10"
+                    ],
+                    "outboundTag": "blocked"
+                }
+            ]
+        }
+    }
 }
 EOF
 iptables -A INPUT -p tcp  --match multiport --dports 443,80 -j ACCEPT
