@@ -63,15 +63,12 @@ server {
     listen [::]:443 ssl default_server;
     root /var/www/html;
     index index.html index.htm index.nginx-debian.html;
+    ssl on;
     ssl_certificate       /etc/v2ray/v2ray.crt;
     ssl_certificate_key   /etc/v2ray/v2ray.key;
-    ssl_session_timeout 1h;
-    ssl_session_cache shared:MozSSL:10m;
-    ssl_session_tickets off;
-    ssl_protocols TLSv1.2 TLSv1.3;
-    ssl_ciphers ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
-    ssl_prefer_server_ciphers on;
-    server_name           $domain;
+    ssl_protocols         TLSv1.2 TLSv1.3;
+    ssl_ciphers           HIGH:!aNULL:!MD5;
+    server_name           dani.ovh.xvolt.tech;
     location /ws/ {
         proxy_redirect off;
         proxy_pass http://127.0.0.1:10000;
@@ -82,116 +79,76 @@ server {
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
     }
-    stream {
-
-  # DNS upstream pool.
-  upstream dns {
-    zone dns 64k;
-    server 8.8.8.8:53;
-  }
-
-  # DNS Server. Listens on both TCP and UDP
-  server {
-    listen 53;
-    listen 53 udp;
-    proxy_responses 1;
-    proxy_pass dns;
-  }
 }
 EOF
 ln -s /etc/nginx/sites-available/ssl /etc/nginx/sites-enabled/
 rm -f /etc/v2ray/config.json
 cat> /etc/v2ray/config.json << END
 {
-  "log": {
-    "access": "/var/log/v2ray/access.log",
-    "error": "/var/log/v2ray/error.log",
-    "loglevel": "info"
+  "log":{
+    "access":"/var/log/v2ray/access.log",
+    "error":"/var/log/v2ray/error.log",
+    "loglevel":"warning"
   },
-  "inbounds": [
+  "inbounds":[
     {
-      "port": 10000,
+      "port":10000,
       "listen":"127.0.0.1",
-      "protocol": "vmess",
-      "settings": {
-        "clients": [
-          {
-            "id": "a4f7ef9b-6951-2397-098d-bb1e660b3805",
-            "alterId": 32
-#tls
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "ws",
-        "security": "tls",
-        "tlsSettings": {
-          "certificates": [
-            {
-              "certificateFile": "etc/v2ray/v2ray.crt",
-              "keyFile": "/etc/v2ray/v2ray.key"
-            }
-          ]
-        },
-        "wsSettings": {
-          "path": "/ws/",
-          "headers": {
-            "Host": ""
-          }
-         },
-        "quicSettings": {},
-        "sockopt": {
-          "mark": 0,
-          "tcpFastOpen": true
-        }
-      },
-      "sniffing": {
-        "enabled": true,
-        "destOverride": [
+      "protocol":"vmess",
+      "sniffing":{
+        "enabled":true,
+        "destOverride":[
           "http",
           "tls"
         ]
       },
-      "domain": "dani.ovh.xvolt.tech"
+      "settings":{
+        "clients":[
+          {
+            "id":"b831381d-6324-4d53-ad4f-8cda48b30811",
+            "alterId":64
+#tls            
+          }
+        ]
+      },
+      "streamSettings":{
+        "network":"ws",
+        "security":"none",
+        "wsSettings":{
+          "path":"/ws/"
+        }
+      }
     }
   ],
-  "outbounds": [
+  "outbounds":[
     {
-      "protocol": "freedom",
-      "settings": {}
+      "protocol":"freedom",
+      "settings":{
+
+      }
     },
     {
-      "protocol": "blackhole",
-      "settings": {},
-      "tag": "blocked"
+      "protocol":"blackhole",
+      "settings":{
+
+      },
+      "tag":"blocked"
     }
   ],
-  "routing": {
-    "rules": [
+  "routing":{
+    "domainStrategy":"AsIs",
+    "rules":[
       {
-        "type": "field",
-        "ip": [
-          "0.0.0.0/8",
-          "10.0.0.0/8",
-          "100.64.0.0/10",
-          "169.254.0.0/16",
-          "172.16.0.0/12",
-          "192.0.0.0/24",
-          "192.0.2.0/24",
-          "192.168.0.0/16",
-          "198.18.0.0/15",
-          "198.51.100.0/24",
-          "203.0.113.0/24",
-          "::1/128",
-          "fc00::/7",
-          "fe80::/10"
+        "type":"field",
+        "ip":[
+          "geoip:private"
         ],
-        "outboundTag": "blocked"
+        "outboundTag":"blocked"
       },
       {
-        "type": "field",
-        "outboundTag": "blocked",
-        "protocol": [
+        "type":"field",
+        "outboundTag":"blocked",
+        "protocol":[
           "bittorrent"
         ]
       }
