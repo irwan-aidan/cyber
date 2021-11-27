@@ -90,19 +90,45 @@ cat <<EOF >>/etc/v2ray/config.json
     "error": "/var/log/v2ray/error.log",
     "loglevel": "info"
   },
+  "stats": {},
+  "api": {
+    "services": [
+      "StatsService"
+    ],
+    "tag": "api"
+  },
+  "policy": {
+    "levels": {
+      "1": {
+        "handshake": 4,
+        "connIdle": 300,
+        "uplinkOnly": 2,
+        "downlinkOnly": 5,
+        "statsUserUplink": false,
+        "statsUserDownlink": false
+      }
+    },
+    "system": {
+      "statsInboundUplink": true,
+      "statsInboundDownlink": true
+    }
+  },
+  "allocate": {
+    "strategy": "always",
+    "refresh": 5,
+    "concurrency": 3
+  },
   "inbounds": [
     {
       "port": 10000,
-      "listen":"127.0.0.1",
+      "listen": "127.0.0.1",
       "protocol": "vmess",
       "settings": {
         "clients": [
           {
-            "id": "b831381d-6324-4d53-ad4f-8cda48b30811",
-            "alterId": 64,
-            "security": "auto",
-            "level": 0
-#tls            
+            "id": "a4f7ef9b-6951-2397-098d-bb1e660b3805",
+            "alterId": 64
+#tls           
           }
         ]
       },
@@ -117,9 +143,24 @@ cat <<EOF >>/etc/v2ray/config.json
   "outbounds": [
     {
       "protocol": "freedom",
-      "settings": {}
+      "settings": {
+      }
     }
-  ]
+  ],
+  "routing": {
+    "settings": {
+      "rules": [
+        {
+          "inboundTag": [
+            "api"
+          ],
+          "outboundTag": "api",
+          "type": "field"
+        }
+      ]
+    },
+    "strategy": "rules"
+  }
 }
 EOF
 iptables -A INPUT -p tcp  --match multiport --dports 443,80 -j ACCEPT
