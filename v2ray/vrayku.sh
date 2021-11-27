@@ -65,8 +65,11 @@ server {
     index index.html index.htm index.nginx-debian.html;
     ssl_certificate       /etc/v2ray/v2ray.crt;
     ssl_certificate_key   /etc/v2ray/v2ray.key;
-    ssl_protocols         TLSv1 TLSv1.1 TLSv1.2;
-    ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+    ssl_session_timeout 1h;
+    ssl_session_cache shared:MozSSL:10m;
+    ssl_session_tickets off;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers AES128+EECDH:AES128+EDH:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES128-SHA256:DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA:ECDHE-RSA-DES-CBC3-SHA:EDH-RSA-DES-CBC3-SHA:AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-SHA256:AES128-SHA256:AES256-SHA:AES128-SHA:DES-CBC3-SHA:HIGH:!aNULL:!eNULL:!EXPORT:!DES:!MD5:!PSK:!RC4;
     ssl_prefer_server_ciphers on;
     server_name           $domain;
     location /ws/ {
@@ -85,42 +88,14 @@ ln -s /etc/nginx/sites-available/ssl /etc/nginx/sites-enabled/
 rm -f /etc/v2ray/config.json
 cat <<EOF >>/etc/v2ray/config.json
 {
-  "log": {
-    "access": "/var/log/v2ray/access.log",
-    "error": "/var/log/v2ray/error.log",
-    "loglevel": "info"
-  },
-  "stats": {},
-  "api": {
-    "services": [
-      "StatsService"
-    ],
-    "tag": "api"
-  },
-  "policy": {
-    "levels": {
-      "1": {
-        "handshake": 4,
-        "connIdle": 300,
-        "uplinkOnly": 2,
-        "downlinkOnly": 5,
-        "statsUserUplink": false,
-        "statsUserDownlink": false
-      }
+    "log": {
+        "access": "/usr/local/v2ray/access.log",
+        "error": "/usr/local/v2ray/error.log",
+        "loglevel": "warning"
     },
-    "system": {
-      "statsInboundUplink": true,
-      "statsInboundDownlink": true
-    }
-  },
-  "allocate": {
-    "strategy": "always",
-    "refresh": 5,
-    "concurrency": 3
-  },
-  "inbounds": [
-    {
-      "port": 10000,
+	"inbounds": [
+     {
+      "port": "10000",
       "listen": "127.0.0.1",
       "protocol": "vmess",
       "settings": {
@@ -128,25 +103,34 @@ cat <<EOF >>/etc/v2ray/config.json
           {
             "id": "a4f7ef9b-6951-2397-098d-bb1e660b3805",
             "alterId": 64
-#tls           
+#tls            
           }
-        ]
+         ]
       },
       "streamSettings": {
         "network": "ws",
         "wsSettings": {
           "path": "/ws/"
+          }
+       }
+     }
+    ],
+    "outbounds": [
+     {
+        "protocol": "freedom",
+        "settings": {
         }
-      }
-    }
-  ],
-  "outbounds": [
-    {
-      "protocol": "freedom",
-      "settings": {
-      }
-    }
-  ],
+     }
+    ],
+	"dns": {
+		"server": [
+			"8.8.8.8",
+			"8.8.4.4",
+			"1.1.1.1",
+			"1.0.0.1",
+			"localhost"
+		]
+	},
   "routing": {
     "settings": {
       "rules": [
