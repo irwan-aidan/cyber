@@ -63,11 +63,11 @@ server {
     listen [::]:443 ssl default_server;
     root /var/www/html;
     index index.html index.htm index.nginx-debian.html;
-    ssl on;
     ssl_certificate       /etc/v2ray/v2ray.crt;
     ssl_certificate_key   /etc/v2ray/v2ray.key;
     ssl_protocols         TLSv1 TLSv1.1 TLSv1.2;
-    ssl_ciphers           HIGH:!aNULL:!MD5;
+    ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+    ssl_prefer_server_ciphers on;
     server_name           $domain;
     location /ws/ {
         proxy_redirect off;
