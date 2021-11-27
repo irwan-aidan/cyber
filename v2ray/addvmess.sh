@@ -32,9 +32,9 @@ uuid=$(cat /proc/sys/kernel/random/uuid)
 read -p "Expired (days): " masaaktif
 exp=`date -d "$masaaktif days" +"%Y-%m-%d"`
 sed -i '/#tls$/a\### '"$user $exp"'\
-},{"id": "'""$uuid""'","alterId": '"2"',"email": "'""$user""'"' /etc/v2ray/config.json
+},{"id": "'""$uuid""'","alterId": '"64"',"email": "'""$user""'"' /etc/v2ray/config.json
 sed -i '/#none$/a\### '"$user $exp"'\
-},{"id": "'""$uuid""'","alterId": '"2"',"email": "'""$user""'"' /etc/v2ray/none.json
+},{"id": "'""$uuid""'","alterId": '"64"',"email": "'""$user""'"' /etc/v2ray/none.json
 cat>/etc/v2ray/$user-tls.json<<EOF
       {
       "v": "2",
@@ -42,7 +42,7 @@ cat>/etc/v2ray/$user-tls.json<<EOF
       "add": "${domain}",
       "port": "443",
       "id": "${uuid}",
-      "aid": "32",
+      "aid": "64",
       "net": "ws",
       "path": "/ws/",
       "type": "none",
@@ -57,7 +57,7 @@ cat>/etc/v2ray/$user-none.json<<EOF
       "add": "${domain}",
       "port": "80",
       "id": "${uuid}",
-      "aid": "32",
+      "aid": "64",
       "net": "ws",
       "path": "/ws/",
       "type": "none",
@@ -81,7 +81,7 @@ echo -e "Domain         : ${domain}"
 echo -e "port TLS       : 443"
 echo -e "port none TLS  : 80"
 echo -e "id             : ${uuid}"
-echo -e "alterId        : 32"
+echo -e "alterId        : 64"
 echo -e "Security       : auto"
 echo -e "network        : ws"
 echo -e "path           : /ws/"
