@@ -22,6 +22,8 @@ read -p "Hostname / Domain: " host
 echo "IP=$host" >> /var/lib/premium-script/ipvps.conf
 echo "$host" >> /root/domain
 domain=$(cat /root/domain)
+hostnamectl set-hostname $domain
+
 #update
 apt update -y
 apt upgrade -y
@@ -30,12 +32,8 @@ apt-get remove --purge ufw firewalld -y
 apt-get remove --purge exim4 -y
 apt-get update && apt-get -y upgrade
 apt-get install netfilter-persistent -y
-apt install cron bash-completion ntpdate -y
-apt-get -y install nginx socat unzip curl git wget
-apt install curl xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils lsb-release -y 
-
-domain=$(cat /root/domain)
-hostnamectl set-hostname $domain
+apt install curl socat xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils lsb-release -y 
+apt install socat cron bash-completion ntpdate -y
 ntpdate pool.ntp.org
 apt -y install chrony
 timedatectl set-ntp true
@@ -45,145 +43,49 @@ timedatectl set-timezone Asia/Kuala_Lumpur
 chronyc sourcestats -v
 chronyc tracking -v
 date
-
-# install v2ray
-# install v2ray
-wget https://raw.githubusercontent.com/irwanmohi/aidan-vpn/main/go.sh && chmod +x go.sh && ./go.sh
-rm -f /root/go.sh
+mkdir /etc/cert
 mkdir /root/.acme.sh
 curl https://acme-install.netlify.app/acme.sh -o /root/.acme.sh/acme.sh
 chmod +x /root/.acme.sh/acme.sh
 systemctl stop nginx
 /root/.acme.sh/acme.sh --issue -d $domain --standalone -k ec-256
-~/.acme.sh/acme.sh --install-cert -d $domain --fullchainpath /etc/v2ray/v2ray.crt --keypath /etc/v2ray/v2ray.key --ecc
+~/.acme.sh/acme.sh --install-cert -d $domain --fullchainpath /etc/cert/dani.crt --keypath /etc/cert/dani.key --ecc
 uuid=$(cat /proc/sys/kernel/random/uuid)
 cat <<EOF >>/etc/nginx/sites-available/ssl
-server {
-    listen 443 ssl default_server;
-    listen [::]:443 ssl default_server;
-    root /var/www/html;
-    index index.html index.htm index.nginx-debian.html;
-    ssl on;
-    ssl_certificate       /etc/v2ray/v2ray.crt;
-    ssl_certificate_key   /etc/v2ray/v2ray.key;
-    ssl_protocols         TLSv1.2 TLSv1.3;
-    ssl_ciphers           HIGH:!aNULL:!MD5;
-    server_name           dani.ovh.xvolt.tech;
-    location /ws/ {
-        proxy_redirect off;
-        proxy_pass http://127.0.0.1:10000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade \$http_upgrade;
-        proxy_set_header Connection "upgrade";
-        proxy_set_header Host \$http_host;
-        proxy_set_header X-Real-IP \$remote_addr;
-        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-    }
+server
+{
+        listen 80;
+        listen [::]:80;
+        server_name $domain;
+        return 301 https://$http_host$request_uri;
+
+        access_log  /dev/null;
+        error_log  /dev/null;
+}
+
+server
+{
+        listen 127.0.0.1:60000 proxy_protocol;
+        listen 127.0.0.1:60001 http2 proxy_protocol;
+        server_name $domain;
+        index index.html index.htm index.php default.php default.htm default.html;
+        root /var/www/html;
+        add_header Strict-Transport-Security "max-age=63072000" always;
+
+        location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$
+        {
+                expires   30d;
+                error_log off;
+        }
+
+        location ~ .*\.(js|css)?$
+        {
+                expires   12h;
+                error_log off;
+        }
 }
 EOF
 ln -s /etc/nginx/sites-available/ssl /etc/nginx/sites-enabled/
-rm -f /etc/v2ray/config.json
-cat> /etc/v2ray/config.json << END
-{
-  "log":{
-    "access":"/var/log/v2ray/access.log",
-    "error":"/var/log/v2ray/error.log",
-    "loglevel":"warning"
-  },
-  "inbounds":[
-    {
-      "port":10000,
-      "listen":"127.0.0.1",
-      "protocol":"vmess",
-      "sniffing":{
-        "enabled":true,
-        "destOverride":[
-          "http",
-          "tls"
-        ]
-      },
-      "settings":{
-        "clients":[
-          {
-            "id":"b831381d-6324-4d53-ad4f-8cda48b30811",
-            "alterId":64
-#tls            
-          }
-        ]
-      },
-      "streamSettings":{
-        "network":"ws",
-        "security":"none",
-        "wsSettings":{
-          "path":"/ws/"
-        }
-      }
-    }
-  ],
-  "outbounds":[
-    {
-      "protocol":"freedom",
-      "settings":{
-
-      }
-    },
-    {
-      "protocol":"blackhole",
-      "settings":{
-
-      },
-      "tag":"blocked"
-    }
-  ],
-  "routing":{
-    "domainStrategy":"AsIs",
-    "rules":[
-      {
-        "type":"field",
-        "ip":[
-          "geoip:private"
-        ],
-        "outboundTag":"blocked"
-      },
-      {
-        "type":"field",
-        "outboundTag":"blocked",
-        "protocol":[
-          "bittorrent"
-        ]
-      }
-    ]
-  }
-}
-END
-
-iptables -A INPUT -p tcp  --match multiport --dports 443,80 -j ACCEPT
-iptables -A INPUT -p udp  --match multiport --dports 443,80 -j ACCEPT
-iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 443 -j ACCEPT
-iptables -I INPUT -m state --state NEW -m udp -p udp --dport 443 -j ACCEPT
-iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT
-iptables -I INPUT -m state --state NEW -m udp -p udp --dport 80 -j ACCEPT
-iptables-save > /etc/iptables.up.rules
-iptables-restore -t < /etc/iptables.up.rules
-netfilter-persistent save
-netfilter-persistent reload
-systemctl daemon-reload
 systemctl restart nginx
 systemctl enable nginx
-systemctl restart v2ray
-systemctl enable v2ray
-
-cd /usr/bin
-wget -O addvmess "https://raw.githubusercontent.com/kor8/cyber/beta/v2ray/addvmess.sh"
-wget -O delvmess "https://raw.githubusercontent.com/kor8/cyber/beta/v2ray/delvmess.sh"
-wget -O cekvmess "https://raw.githubusercontent.com/kor8/cyber/beta/v2ray/cekvmess.sh"
-wget -O renewvmess "https://raw.githubusercontent.com/kor8/cyber/beta/v2ray/renewvmess.sh"
-chmod +x addvmess
-chmod +x delvmess
-chmod +x cekvmess
-chmod +x renewvmess
-cd
-rm -f /root/vrayku.sh
-mv /root/domain /etc/v2ray
-
 
