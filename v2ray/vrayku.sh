@@ -29,13 +29,13 @@ apt dist-upgrade -y
 apt-get remove --purge ufw firewalld -y
 apt-get remove --purge exim4 -y
 apt-get update && apt-get -y upgrade
+apt-get install netfilter-persistent -y
+apt install cron bash-completion ntpdate -y
 apt-get -y install nginx socat unzip curl git wget
+apt install curl xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils lsb-release -y 
 
 domain=$(cat /root/domain)
 hostnamectl set-hostname $domain
-apt-get install netfilter-persistent -y
-apt install curl xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils lsb-release -y 
-apt install cron bash-completion ntpdate -y
 ntpdate pool.ntp.org
 apt -y install chrony
 timedatectl set-ntp true
