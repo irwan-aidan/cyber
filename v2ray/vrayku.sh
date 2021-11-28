@@ -28,8 +28,20 @@ hostnamectl set-hostname $domain
 apt update -y
 apt upgrade -y
 apt dist-upgrade -y
+
+rm -f /etc/apt/sources.list.d/nginx.list
+
+echo "deb http://nginx.org/packages/debian buster nginx" >/etc/apt/sources.list.d/nginx.list
+curl -fsSL https://nginx.org/keys/nginx_signing.key | apt-key add -
+
 apt-get remove --purge ufw firewalld -y
 apt-get remove --purge exim4 -y
+systemctl stop firewalld
+systemctl disable firewalld
+systemctl stop nftables
+systemctl disable nftables
+systemctl stop ufw
+systemctl disable ufw
 apt-get update && apt-get -y upgrade
 apt-get install netfilter-persistent -y
 apt install curl socat xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils lsb-release -y 
@@ -51,6 +63,7 @@ systemctl stop nginx
 /root/.acme.sh/acme.sh --issue -d $domain --standalone -k ec-256
 ~/.acme.sh/acme.sh --install-cert -d $domain --fullchainpath /etc/cert/dani.crt --keypath /etc/cert/dani.key --ecc
 uuid=$(cat /proc/sys/kernel/random/uuid)
+mkdir -p /etc/nginx/conf.d
 cat <<EOF >>/etc/nginx/sites-available/ssl
 server
 {
