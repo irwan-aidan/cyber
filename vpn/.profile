@@ -12,6 +12,6 @@ fi
 mesg n || true
 clear
 neofetch
-echo -e "${blue}Script By VoltNet${NC}"
+echo -e "${blue}Seller By Abeka${NC}"
 echo -e "${blue}Premium Multi Port Script${NC}"
 echo -e "${blue}Type 'menu' To List Commands${NC}"
