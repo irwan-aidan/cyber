@@ -1,12 +1,11 @@
 #!/bin/sh
 
-wget -O - https://swupdate.openvpn.net/repos/repo-public.gpg|apt-key add -
-sleep 2
-echo "deb http://build.openvpn.net/debian/openvpn/release/2.4 stretch main" > /etc/apt/sources.list.d/openvpn-aptrepo.list
-#Requirement
+wget -q https://packages.sury.org/php/apt.gpg -O- | sudo apt-key add -
+sudo echo "deb https://packages.sury.org/php/ buster main" | tee /etc/apt/sources.list.d/php.list
+
 apt update
 apt upgrade -y
-apt install openvpn nginx php7.0-fpm stunnel4 squid3 dropbear easy-rsa vnstat ufw build-essential fail2ban zip -y
+apt install openvpn nginx php php-fpm stunnel4 squid3 dropbear easy-rsa vnstat ufw build-essential fail2ban zip -y
 
 # initializing var
 MYIP=`ifconfig eth0 | awk 'NR==2 {print $2}'`
@@ -359,7 +358,7 @@ vnstat -u -i eth0
 apt-get -y autoremove
 chown -R www-data:www-data /home/vps/public_html
 service nginx start
-service php7.0-fpm start
+service php-fpm start
 service vnstat restart
 service openvpn restart
 service dropbear restart
