@@ -5,8 +5,8 @@ echo -e "=================================================" | lolcat
 echo -e "         Premium Auto Script By PAKYAVPN         " | lolcat
 echo -e "-----------------------------------------------" | lolcat
 echo -e ""
-figlet PakyaVPN | lolcat
-figlet AutoScript | lolcat
+figlet echo -e "PakyaVPN" | lolcat
+figlet echo -e "AutoScript" | lolcat
 echo "         	        UNLIMITED SEGALANYA!              " | lolcat
 echo ""
 echo "         ......................................     " | lolcat
